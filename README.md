@@ -493,3 +493,97 @@ funWithParam 1 2 3 4 5 6 7 8 9 34 73
 | $@       | 与$*相同，但是使用时加引号，并在引号中返回每个参数。         |
 | $-       | 显示Shell使用的当前选项，与set命令功能相同。                 |
 | $?       | 显示最后命令的退出状态。0表示没有错误，其他任何值表明有错误。 |
+
+### Shell输入、输出重定向
+
+| 命令            | 说明                                               |
+| :-------------- | :------------------------------------------------- |
+| command > file  | 将输出重定向到 file。                              |
+| command < file  | 将输入重定向到 file。                              |
+| command >> file | 将输出以追加的方式重定向到 file。                  |
+| n > file        | 将文件描述符为 n 的文件重定向到 file。             |
+| n >> file       | 将文件描述符为 n 的文件以追加的方式重定向到 file。 |
+| n >& m          | 将输出文件 m 和 n 合并。                           |
+| n <& m          | 将输入文件 m 和 n 合并。                           |
+| << tag          | 将开始标记 tag 和结束标记 tag 之间的内容作为输入。 |
+
+> 文件描述符：需要注意的是，文件描述符 0 通常是标准输入（STDIN） ，1是标准输出（STDOUT），2 是标准错误输出（STDERR）
+
+`>` 是更新文件，`>>` 是追加文件
+
+> Git命令插播(提交代码到新的分支里面)： git push origin new_branch:new_branch
+
+> 默认情况下： `command > file` 将stdout重定向到file，command < file 将stdin重定向到file，
+
+`$ comand 2 > file` 	stderr 重定向到file
+
+`$ command 2 >> file` 	将stderr追加到file的文件末尾。
+
+`$ command > file 2>&1` 	将 stdout 和stderr合并 重定向到file
+
+#### Here Document
+
+> 用来将输入重定向 到一个交互式的shell脚本或者程序。
+
+基本形式如下：
+
+``` bash
+command << delimiter
+		document
+delimiter
+```
+
+作用： 将两个delimiter 之间的内容（document） 作为输入传递给command。
+
+> 注意： 
+>
+> 1. 结尾的delimiter 一定要顶格写，前面不能有字符，包括空格和tab缩进。
+> 2. 开始的 delimiter前后的空格会被忽略掉
+
+
+
+```bash
+#!/bin/bash
+cat << EOF
+欢迎来到
+Shell世界
+EOF
+
+# 输出结果
+# 欢迎来到   
+# Shell世界
+```
+
+
+
+#### /dev/null 文件
+
+> $ command > /dev/null
+
+/dev/null 	是一个特殊的文件，写入到它的内容都会被丢弃。
+
+将命令的输出重定向到它，会起到“禁止输出”的效果。如果希望品笔调stdout和stderr ，可以用命令：
+
+> $ command > /dev/null 2>&1
+>
+> 注意：  0是标准输入、1是标准输出、2是标准错误输出。 2和>之间可以有空格。
+
+###Sehll 文件包含
+
+Shell 可以包含外部脚本，这样可以很方便的封装一些公用的代码作为一个独立的文件。
+
+
+
+sehll文件包含的语法格式如下：
+
+``` bash
+. filename # 注意⚠️： （.）和文件名之间有空格。
+
+# 或者：
+
+source filename
+
+```
+
+
+
